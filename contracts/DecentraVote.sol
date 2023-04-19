@@ -14,14 +14,20 @@ contract DecentraVote {
     mapping(address => Candidate) public candidates;
     address[] public candidateAddrs;
 
+    modifier isCandidate(address _addr) {
+        for(uint i = 0; i < candidateAddrs.length; i++) {
+            if(candidates[_addr].candidateAddr == _addr) {
+                revert CandidateAlreadyExists();
+            }
+        }
+        _;
+    }
+
     function registerAsCandidate(
         address _addr,
         string memory _name,
         string memory _campaignDesc
-    ) external {
-        if(candidates[_addr].candidateAddr == _addr) {
-            revert CandidateAlreadyExists();
-        }
+    ) external isCandidate(_addr) {
         Candidate memory newCandidate;
         newCandidate.candidateAddr = _addr;
         newCandidate.name = _name;
