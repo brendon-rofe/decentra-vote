@@ -5,6 +5,8 @@ contract DecentraVote {
 
     event CampaignCreated(uint indexed campaignId, string name);
 
+    error NotCampaignCreator();
+
     struct Campaign {
         uint id;
         string name;
@@ -20,7 +22,7 @@ contract DecentraVote {
     }
 
     uint public nextCampaignId = 1;
-    mapping(uint => Campaign) private campaigns;
+    mapping(uint => Campaign) public campaigns;
 
     struct Candidate {
         uint id;
@@ -31,6 +33,13 @@ contract DecentraVote {
     struct Voter {
         address id;
         string votedFor;
+    }
+
+    modifier onlyCampaignCreator(uint _campaignId) {
+        if(campaigns[_campaignId].creator != msg.sender) {
+            revert NotCampaignCreator();
+        }
+        _;
     }
 
     function createCampaign(
