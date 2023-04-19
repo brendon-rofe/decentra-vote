@@ -3,6 +3,8 @@ pragma solidity ^0.8.19;
 
 contract DecentraVote {
 
+    event CampaignCreated(uint indexed campaignId, string name);
+
     struct Campaign {
         uint id;
         string name;
@@ -39,6 +41,7 @@ contract DecentraVote {
         campaigns[nextCampaignId].name = _name;
         campaigns[nextCampaignId].description = _desc;
         campaigns[nextCampaignId].creator = msg.sender;
+        emit CampaignCreated(nextCampaignId, _name);
         nextCampaignId++;
     }
 
