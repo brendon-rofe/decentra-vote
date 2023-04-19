@@ -52,15 +52,14 @@ contract DecentraVote {
     function createElection(
         string memory _name,
         string memory _desc,
-        uint _start,
-        uint _end,
+        uint _duration,
         address[] memory _candidates
     ) external {
         Election memory newElection;
         newElection.name = _name;
         newElection.description = _desc;
-        newElection.start = _start;
-        newElection.end = _end;
+        newElection.start = block.timestamp;
+        newElection.end = block.timestamp + _duration;
         newElection.candidates = _candidates;
         elections[nextEelectionId] = newElection;
         emit ElectionCreated(nextEelectionId, _name);
