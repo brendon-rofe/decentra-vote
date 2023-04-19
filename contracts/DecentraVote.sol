@@ -3,6 +3,17 @@ pragma solidity ^0.8.19;
 
 contract DecentraVote {
 
+    struct Election {
+        string name;
+        string description;
+        uint start;
+        uint end;
+        address[] candidates;
+    }
+
+    uint public nextEelctionId = 1;
+    mapping(uint => Election) public elections;
+
     struct Candidate {
         address candidateAddr;
         string name;
@@ -34,6 +45,23 @@ contract DecentraVote {
         newCandidate.campaignDesc = _campaignDesc;
         candidates[_addr] = newCandidate;
         candidateAddrs.push(_addr);
+    }
+
+    function createElection(
+        string memory _name,
+        string memory _desc,
+        uint _start,
+        uint _end,
+        address[] memory _candidates
+    ) external {
+        Election memory newElection;
+        newElection.name = _name;
+        newElection.description = _desc;
+        newElection.start = _start;
+        newElection.end = _end;
+        newElection.candidates = _candidates;
+        elections[nextEelctionId] = newElection;
+        nextEelctionId++;
     }
 
 }
