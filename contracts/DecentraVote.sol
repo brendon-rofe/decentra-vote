@@ -7,6 +7,7 @@ contract DecentraVote {
         uint id;
         string name;
         string description;
+        address creator;
         bool isActive;
         uint start;
         uint end;
@@ -37,6 +38,8 @@ contract DecentraVote {
         campaigns[nextCampaignId].id = nextCampaignId;
         campaigns[nextCampaignId].name = _name;
         campaigns[nextCampaignId].description = _desc;
+        campaigns[nextCampaignId].creator = msg.sender;
+        nextCampaignId++;
     }
 
 }
