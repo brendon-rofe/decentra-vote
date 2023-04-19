@@ -6,6 +6,7 @@ contract DecentraVote {
     event CampaignCreated(uint indexed campaignId, string name);
 
     error NotCampaignCreator();
+    error CandidateAlreadyRegistered();
 
     struct Campaign {
         uint id;
@@ -14,7 +15,9 @@ contract DecentraVote {
         address creator;
         uint start;
         uint end;
+        uint nextCandidateId;
         mapping(uint => Candidate) candidates;
+        mapping(string => bool) isRegistered;
         mapping(address => bool) hasVoted;
         uint candidateCount;
         uint totalVotes;
@@ -41,6 +44,13 @@ contract DecentraVote {
         _;
     }
 
+    modifier candidateAlreadyRegistered(uint _campaignId, string memory _name) {
+        if(campaigns[_campaignId].isRegistered[_name]) {
+            revert CandidateAlreadyRegistered();
+        }
+        _;
+    }
+
     function createCampaign(
         string memory _name, 
         string memory _desc
@@ -48,6 +58,7 @@ contract DecentraVote {
         campaigns[nextCampaignId].id = nextCampaignId;
         campaigns[nextCampaignId].name = _name;
         campaigns[nextCampaignId].description = _desc;
+        campaigns[nextCampaignId].nextCandidateId = 1;
         campaigns[nextCampaignId].creator = msg.sender;
         emit CampaignCreated(nextCampaignId, _name);
         nextCampaignId++;
@@ -58,6 +69,18 @@ contract DecentraVote {
     {
         campaigns[_campaignId].start = block.timestamp;
         campaigns[_campaignId].end = block.timestamp + _duration;
+    }
+
+    function registerCandidate(uint _campaignId, string memory _name)
+        external candidateAlreadyRegistered(_campaignId, _name)
+    {
+        Candidate memory newCandidate;
+        uint candidateId = campaigns[_campaignId].nextCandidateId;
+        newCandidate.id =candidateId;
+        newCandidate.name = _name;
+        campaigns[_campaignId].candidates[candidateId] = newCandidate;
+        campaigns[_campaignId].isRegistered[_name] = true;
+        campaigns[_campaignId].nextCandidateId++;
     }
 
 }
