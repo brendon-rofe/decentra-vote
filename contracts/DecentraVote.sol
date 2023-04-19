@@ -3,6 +3,8 @@ pragma solidity ^0.8.19;
 
 contract DecentraVote {
 
+    event ElectionCreated(uint indexed electionId, string electionName);
+
     struct Election {
         string name;
         string description;
@@ -11,7 +13,7 @@ contract DecentraVote {
         address[] candidates;
     }
 
-    uint public nextEelctionId = 1;
+    uint public nextEelectionId = 1;
     mapping(uint => Election) public elections;
 
     struct Candidate {
@@ -60,8 +62,9 @@ contract DecentraVote {
         newElection.start = _start;
         newElection.end = _end;
         newElection.candidates = _candidates;
-        elections[nextEelctionId] = newElection;
-        nextEelctionId++;
+        elections[nextEelectionId] = newElection;
+        emit ElectionCreated(nextEelectionId, _name);
+        nextEelectionId++;
     }
 
 }
