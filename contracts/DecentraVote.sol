@@ -12,6 +12,7 @@ contract DecentraVote {
     error CandidateAlreadyExists();
 
     mapping(address => Candidate) public candidates;
+    address[] public candidateAddrs;
 
     function registerAsCandidate(
         address _addr,
@@ -26,6 +27,7 @@ contract DecentraVote {
         newCandidate.name = _name;
         newCandidate.campaignDesc = _campaignDesc;
         candidates[_addr] = newCandidate;
+        candidateAddrs.push(_addr);
     }
 
 }
