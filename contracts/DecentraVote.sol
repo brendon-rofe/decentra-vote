@@ -12,7 +12,6 @@ contract DecentraVote {
         string name;
         string description;
         address creator;
-        bool isActive;
         uint start;
         uint end;
         mapping(uint => Candidate) candidates;
@@ -52,6 +51,13 @@ contract DecentraVote {
         campaigns[nextCampaignId].creator = msg.sender;
         emit CampaignCreated(nextCampaignId, _name);
         nextCampaignId++;
+    }
+
+    function startCampaign(uint _campaignId, uint _duration) 
+        external onlyCampaignCreator(_campaignId) 
+    {
+        campaigns[_campaignId].start = block.timestamp;
+        campaigns[_campaignId].end = block.timestamp + _duration;
     }
 
 }
