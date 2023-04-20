@@ -8,6 +8,8 @@ contract DecentraVote {
 
     error NotCampaignCreator();
     error CandidateAlreadyRegistered();
+    error HasAlreadyVoted();
+    error CampaignEnded();
 
     struct Campaign {
         uint id;
@@ -52,6 +54,20 @@ contract DecentraVote {
         _;
     }
 
+    modifier hasAlreadyVoted(uint _campaignId) {
+        if(campaigns[_campaignId].hasVoted[msg.sender] == true) {
+            revert HasAlreadyVoted();
+        }
+        _;
+    }
+
+    modifier campaignEnded(uint _campaignId) {
+        if(campaigns[_campaignId].end < block.timestamp) {
+            revert CampaignEnded();
+        }
+        _;
+    }
+
     function createCampaign(
         string memory _name, 
         string memory _desc
@@ -65,7 +81,7 @@ contract DecentraVote {
         nextCampaignId++;
     }
 
-    function startCampaign(uint _campaignId, uint _duration) 
+    function startCampaign(uint _campaignId, uint _duration)
         external onlyCampaignCreator(_campaignId) 
     {
         campaigns[_campaignId].start = block.timestamp;
@@ -84,6 +100,16 @@ contract DecentraVote {
         campaigns[_campaignId].candidateCount++;
         emit CandidateRegistered(_campaignId, candidateId, _name);
         campaigns[_campaignId].nextCandidateId++;
+    }
+
+    function vote(uint _campaignId, uint _candidateId)
+        external 
+        hasAlreadyVoted(_campaignId)
+        campaignEnded(_campaignId)
+    {
+        campaigns[_campaignId].candidates[_candidateId].voteCount++;
+        campaigns[_campaignId].totalVotes++;
+        campaigns[_campaignId].hasVoted[msg.sender] = true;
     }
 
 }
