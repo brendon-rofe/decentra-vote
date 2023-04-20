@@ -76,11 +76,12 @@ contract DecentraVote {
         external candidateAlreadyRegistered(_campaignId, _name)
     {
         Candidate memory newCandidate;
-        uint candidateId = campaigns[_campaignId].nextCandidateId;
+        uint candidateId = campaigns[_campaignId].nextCandidateId + 1;
         newCandidate.id =candidateId;
         newCandidate.name = _name;
         campaigns[_campaignId].candidates[candidateId] = newCandidate;
         campaigns[_campaignId].isRegistered[_name] = true;
+        campaigns[_campaignId].candidateCount++;
         emit CandidateRegistered(_campaignId, candidateId, _name);
         campaigns[_campaignId].nextCandidateId++;
     }
