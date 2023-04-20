@@ -4,6 +4,7 @@ pragma solidity ^0.8.19;
 contract DecentraVote {
 
     event CampaignCreated(uint indexed campaignId, string name);
+    event CandidateRegistered(uint indexed campaignId, uint indexed candidateId, string name);
 
     error NotCampaignCreator();
     error CandidateAlreadyRegistered();
@@ -80,6 +81,7 @@ contract DecentraVote {
         newCandidate.name = _name;
         campaigns[_campaignId].candidates[candidateId] = newCandidate;
         campaigns[_campaignId].isRegistered[_name] = true;
+        emit CandidateRegistered(_campaignId, candidateId, _name);
         campaigns[_campaignId].nextCandidateId++;
     }
 
