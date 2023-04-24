@@ -4,6 +4,7 @@
   "description": "DecentraVote is a decentralized voting system built using Express.js, MongoDB, Ethers.js, and Solidity. This project aims to provide a secure, transparent, and tamper-proof platform for conducting elections and decision-making processes across various sectors.",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon --exec ts-node --files --watch src -- src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
