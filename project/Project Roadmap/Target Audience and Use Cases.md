@@ -1,4 +1,4 @@
-Target Audience:
+## Target Audience:
 
 1.  Government organizations: DecentraVote can be utilized by government organizations to conduct secure and transparent elections for various purposes, such as local or national elections, referendums, or policy decisions.
     
@@ -10,7 +10,7 @@ Target Audience:
     
 5.  Online communities: DecentraVote can also serve online communities that want a decentralized and secure way to make collective decisions or elect moderators and administrators.
 
-Use Cases:
+##  Use Cases:
 
 1.  Political elections: DecentraVote can be utilized to run secure, transparent, and tamper-proof elections at various levels, such as local, regional, or national elections.
     
