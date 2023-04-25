@@ -7,9 +7,11 @@ contract DecentraVote {
     event CandidateRegistered(uint indexed campaignId, uint indexed candidateId, string name);
 
     error NotCampaignCreator();
+    error VoterAlreadyRegistered();
     error CandidateAlreadyRegistered();
     error HasAlreadyVoted();
     error CampaignEnded();
+    error VoterNotRegistered();
 
     struct Campaign {
         uint id;
@@ -20,7 +22,8 @@ contract DecentraVote {
         uint end;
         uint nextCandidateId;
         mapping(uint => Candidate) candidates;
-        mapping(string => bool) isRegistered;
+        mapping (address => bool) voterRegistered;
+        mapping(string => bool) candidateRegistered;
         mapping(address => bool) hasVoted;
         uint candidateCount;
         uint totalVotes;
@@ -48,8 +51,22 @@ contract DecentraVote {
     }
 
     modifier candidateAlreadyRegistered(uint _campaignId, string memory _name) {
-        if(campaigns[_campaignId].isRegistered[_name]) {
+        if(campaigns[_campaignId].candidateRegistered[_name]) {
             revert CandidateAlreadyRegistered();
+        }
+        _;
+    }
+
+    modifier voterAlreadyRegistered(uint _campaignId, address _voterAddr) {
+        if(campaigns[_campaignId].voterRegistered[_voterAddr]) {
+            revert VoterAlreadyRegistered();
+        }
+        _;
+    }
+
+    modifier voterIsRegistered(uint _campaignId, address _voterAddr) {
+        if(!campaigns[_campaignId].voterRegistered[_voterAddr]) {
+            revert VoterNotRegistered();
         }
         _;
     }
@@ -96,20 +113,27 @@ contract DecentraVote {
         newCandidate.id =candidateId;
         newCandidate.name = _name;
         campaigns[_campaignId].candidates[candidateId] = newCandidate;
-        campaigns[_campaignId].isRegistered[_name] = true;
+        campaigns[_campaignId].candidateRegistered[_name] = true;
         campaigns[_campaignId].candidateCount++;
         emit CandidateRegistered(_campaignId, candidateId, _name);
         campaigns[_campaignId].nextCandidateId++;
     }
 
     function vote(uint _campaignId, uint _candidateId)
-        external 
+        external
+        voterIsRegistered(_campaignId, msg.sender)
         hasAlreadyVoted(_campaignId)
         campaignEnded(_campaignId)
     {
         campaigns[_campaignId].candidates[_candidateId].voteCount++;
         campaigns[_campaignId].totalVotes++;
         campaigns[_campaignId].hasVoted[msg.sender] = true;
+    }
+
+    function regsiterVoter(uint _campaignId) 
+        external voterAlreadyRegistered(_campaignId, msg.sender)
+    {
+        campaigns[_campaignId].voterRegistered[msg.sender] = true;
     }
 
 }
