@@ -52,4 +52,10 @@ contract DecentraVote {
         campaigns[_campaignId].nextCandidateId++;
     }
 
+    function getCandidate(uint _campaignId, uint _candidateId) 
+        external view returns (Candidate memory)
+    {
+        return campaigns[_campaignId].candidates[_candidateId];
+    }
+
 }
