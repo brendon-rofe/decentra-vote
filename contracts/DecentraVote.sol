@@ -9,6 +9,7 @@ contract DecentraVote {
         string description;
         uint nextCandidateId;
         mapping(uint => Candidate) candidates;
+        mapping(address => bool) isRegistered;
         mapping(address => bool) hasVoted;
         uint startTime;
         uint endTime;
@@ -73,6 +74,10 @@ contract DecentraVote {
 
     function removeCandidate(uint _campaignId, uint _candidateId) external {
         delete campaigns[_campaignId].candidates[_candidateId];
+    }
+
+    function registerToVote(uint _campaignId) external {
+        campaigns[_campaignId].isRegistered[msg.sender] = true;
     }
 
 }
