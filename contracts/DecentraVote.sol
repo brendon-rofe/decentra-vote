@@ -43,4 +43,13 @@ contract DecentraVote {
         campaigns[nextCampaignId].endTime = block.timestamp + _duration;
     }
 
+    function addCandidate(uint _campaignId, string memory _manifesto) external {
+        uint id = campaigns[_campaignId].nextCandidateId;
+        Candidate memory candidate;
+        candidate.candidateAddress = msg.sender;
+        candidate.campaignManifesto = _manifesto;
+        campaigns[_campaignId].candidates[id] = candidate;
+        campaigns[_campaignId].nextCandidateId++;
+    }
+
 }
