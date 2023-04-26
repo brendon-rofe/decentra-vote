@@ -77,6 +77,8 @@ contract DecentraVote {
     }
 
     function registerToVote(uint _campaignId) external {
+        voters[msg.sender].voterAddress = msg.sender;
+        voters[msg.sender].participatingCampaigns.push(_campaignId);
         campaigns[_campaignId].isRegistered[msg.sender] = true;
     }
 
