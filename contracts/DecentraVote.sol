@@ -80,4 +80,8 @@ contract DecentraVote {
         campaigns[_campaignId].isRegistered[msg.sender] = true;
     }
 
+    function vote(uint _campaignId, uint _candidateId) external {
+        campaigns[_campaignId].candidates[_candidateId].numVotes++;
+    }
+
 }
