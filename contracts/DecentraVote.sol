@@ -71,4 +71,8 @@ contract DecentraVote {
         return campaigns[_campaignId].candidates[_candidateId];
     }
 
+    function removeCandidate(uint _campaignId, uint _candidateId) external {
+        delete campaigns[_campaignId].candidates[_candidateId];
+    }
+
 }
