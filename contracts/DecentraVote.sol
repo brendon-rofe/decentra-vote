@@ -10,6 +10,8 @@ contract DecentraVote {
         uint nextCandidateId;
         mapping(uint => Candidate) candidates;
         mapping(address => bool) hasVoted;
+        uint startTime;
+        uint endTime;
     }
 
     uint public nextCampaignId = 1;
@@ -34,6 +36,11 @@ contract DecentraVote {
         campaigns[nextCampaignId].description = _description;
         campaigns[nextCampaignId].nextCandidateId = 1;
         nextCampaignId++;
+    }
+
+    function startCampaign(uint _duration) external {
+        campaigns[nextCampaignId].startTime = block.timestamp;
+        campaigns[nextCampaignId].endTime = block.timestamp + _duration;
     }
 
 }
