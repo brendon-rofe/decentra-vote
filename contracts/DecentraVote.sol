@@ -3,8 +3,11 @@ pragma solidity ^0.8.18;
 
 contract DecentraVote {
 
+    error NotCampaignCreator();
+
     struct Campaign {
         uint id;
+        address campaignCreator;
         string name;
         string description;
         uint nextCandidateId;
@@ -31,17 +34,27 @@ contract DecentraVote {
 
     mapping(address => Voter) public voters;
 
+    modifier isCampaignCreator(uint _campaignId, address _campaignCreator) {
+        if(campaigns[_campaignId].campaignCreator != _campaignCreator) {
+            revert NotCampaignCreator();
+        }
+        _;
+    }
+
     function createCampaign(string memory _name, string memory _description) external {
         campaigns[nextCampaignId].id = nextCampaignId;
+        campaigns[nextCampaignId].campaignCreator = msg.sender;
         campaigns[nextCampaignId].name = _name;
         campaigns[nextCampaignId].description = _description;
         campaigns[nextCampaignId].nextCandidateId = 1;
         nextCampaignId++;
     }
 
-    function startCampaign(uint _duration) external {
-        campaigns[nextCampaignId].startTime = block.timestamp;
-        campaigns[nextCampaignId].endTime = block.timestamp + _duration;
+    function startCampaign(uint _campaignId, uint _duration) 
+        external isCampaignCreator(_campaignId, msg.sender)
+    {
+        campaigns[_campaignId].startTime = block.timestamp;
+        campaigns[_campaignId].endTime = block.timestamp + _duration;
     }
 
     function getCampaignDetails(uint _campaignId) 
