@@ -12,6 +12,7 @@ contract DecentraVote {
         mapping(address => bool) hasVoted;
     }
 
+    uint public nextCampaignId = 1;
     mapping(uint => Campaign) public campaigns;
 
     struct Candidate {
@@ -26,5 +27,13 @@ contract DecentraVote {
     }
 
     mapping(address => Voter) public voters;
+
+    function createCampaign(string memory _name, string memory _description) external {
+        campaigns[nextCampaignId].id = nextCampaignId;
+        campaigns[nextCampaignId].name = _name;
+        campaigns[nextCampaignId].description = _description;
+        campaigns[nextCampaignId].nextCandidateId = 1;
+        nextCampaignId++;
+    }
 
 }
