@@ -43,6 +43,19 @@ contract DecentraVote {
         campaigns[nextCampaignId].endTime = block.timestamp + _duration;
     }
 
+    function getCampaignDetails(uint _campaignId) 
+        external view returns (uint, string memory, string memory, uint, uint, uint)
+    {
+        return (
+            campaigns[_campaignId].id,
+            campaigns[_campaignId].name,
+            campaigns[_campaignId].description,
+            campaigns[_campaignId].nextCandidateId,
+            campaigns[_campaignId].startTime,
+            campaigns[_campaignId].endTime
+        );
+    }
+
     function addCandidate(uint _campaignId, string memory _manifesto) external {
         uint id = campaigns[_campaignId].nextCandidateId;
         Candidate memory candidate;
