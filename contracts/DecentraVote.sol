@@ -34,13 +34,6 @@ contract DecentraVote {
 
     mapping(address => Voter) public voters;
 
-    modifier isCampaignCreator(uint _campaignId, address _campaignCreator) {
-        if(campaigns[_campaignId].campaignCreator != _campaignCreator) {
-            revert NotCampaignCreator();
-        }
-        _;
-    }
-
     function createCampaign(string memory _name, string memory _description) external {
         campaigns[nextCampaignId].id = nextCampaignId;
         campaigns[nextCampaignId].campaignCreator = msg.sender;
@@ -51,8 +44,11 @@ contract DecentraVote {
     }
 
     function startCampaign(uint _campaignId, uint _duration) 
-        external isCampaignCreator(_campaignId, msg.sender)
+        external
     {
+        if(campaigns[_campaignId].campaignCreator != msg.sender) {
+            revert NotCampaignCreator();
+        }
         campaigns[_campaignId].startTime = block.timestamp;
         campaigns[_campaignId].endTime = block.timestamp + _duration;
     }
