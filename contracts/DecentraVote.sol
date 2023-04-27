@@ -42,6 +42,7 @@ contract DecentraVote {
         campaigns[nextCampaignId].name = _name;
         campaigns[nextCampaignId].description = _description;
         campaigns[nextCampaignId].nextCandidateId = 1;
+        registerToVote(nextCampaignId);
         nextCampaignId++;
     }
 
@@ -89,7 +90,7 @@ contract DecentraVote {
         delete campaigns[_campaignId].candidates[_candidateId];
     }
 
-    function registerToVote(uint _campaignId) external {
+    function registerToVote(uint _campaignId) public {
         voters[msg.sender].voterAddress = msg.sender;
         voters[msg.sender].participatingCampaigns.push(_campaignId);
         campaigns[_campaignId].isRegistered[msg.sender] = true;
