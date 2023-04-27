@@ -12,6 +12,7 @@ contract DecentraVote {
         string description;
         uint nextCandidateId;
         mapping(uint => Candidate) candidates;
+        uint numCandidates;
         mapping(address => bool) isRegistered;
         mapping(address => bool) hasVoted;
         uint startTime;
@@ -73,6 +74,7 @@ contract DecentraVote {
         candidate.campaignManifesto = _manifesto;
         campaigns[_campaignId].candidates[id] = candidate;
         campaigns[_campaignId].nextCandidateId++;
+        campaigns[_campaignId].numCandidates++;
     }
 
     function getCandidate(uint _campaignId, uint _candidateId) 
@@ -82,6 +84,7 @@ contract DecentraVote {
     }
 
     function removeCandidate(uint _campaignId, uint _candidateId) external {
+        campaigns[_campaignId].numCandidates--;
         delete campaigns[_campaignId].candidates[_candidateId];
     }
 
