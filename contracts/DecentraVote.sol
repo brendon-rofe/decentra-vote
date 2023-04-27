@@ -4,6 +4,7 @@ pragma solidity ^0.8.18;
 contract DecentraVote {
 
     error NotCampaignCreator();
+    error NotRegistered();
 
     struct Campaign {
         uint id;
@@ -95,6 +96,9 @@ contract DecentraVote {
     }
 
     function vote(uint _campaignId, uint _candidateId) external {
+        if(!campaigns[_campaignId].isRegistered[msg.sender]) {
+            revert NotRegistered();
+        }
         campaigns[_campaignId].candidates[_candidateId].numVotes++;
     }
 
