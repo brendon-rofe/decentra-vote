@@ -3,8 +3,9 @@ pragma solidity ^0.8.18;
 
 contract DecentraVote {
 
-    error NotCampaignCreator();
     error NotRegistered();
+    error HasAlreadyVoted();
+    error NotCampaignCreator();
 
     struct Campaign {
         uint id;
@@ -100,6 +101,10 @@ contract DecentraVote {
         if(!campaigns[_campaignId].isRegistered[msg.sender]) {
             revert NotRegistered();
         }
+        if(campaigns[_campaignId].hasVoted[msg.sender]) {
+            revert HasAlreadyVoted();
+        }
+        campaigns[_campaignId].hasVoted[msg.sender] = true;
         campaigns[_campaignId].candidates[_candidateId].numVotes++;
     }
 
