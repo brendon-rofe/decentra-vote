@@ -6,6 +6,7 @@ contract DecentraVote {
     error NotRegistered();
     error HasAlreadyVoted();
     error NotCampaignCreator();
+    error CampaignNotStarted();
 
     struct Campaign {
         uint id;
@@ -98,6 +99,9 @@ contract DecentraVote {
     }
 
     function vote(uint _campaignId, uint _candidateId) external {
+        if(campaigns[_campaignId].startTime == 0) {
+            revert CampaignNotStarted();
+        }
         if(!campaigns[_campaignId].isRegistered[msg.sender]) {
             revert NotRegistered();
         }
