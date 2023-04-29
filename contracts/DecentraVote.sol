@@ -99,6 +99,13 @@ contract DecentraVote {
         campaigns[_campaignId].isRegistered[msg.sender] = true;
     }
 
+    function unregisterVoter(uint _campaignId, address _voterAddress) external {
+        if(msg.sender != campaigns[_campaignId].campaignCreator) {
+            revert NotCampaignCreator();
+        }
+        campaigns[_campaignId].isRegistered[_voterAddress] = false;
+    }
+
     function vote(uint _campaignId, uint _candidateId) external {
         if(campaigns[_campaignId].startTime == 0) {
             revert CampaignNotStarted();
